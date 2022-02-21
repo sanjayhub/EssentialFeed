@@ -58,40 +58,26 @@ class RemoteLoaderTests: XCTestCase {
         }
     }
     
-   func tests_load_deliversItemsOn200HTTPResponseWithJSONItems() {
-            let (sut, client) = makeSUT()
-
-            let item1 = FeedItem(id: UUID(),
-                                 description: nil,
-                                 location: nil,
-                                 imageURL: URL(string: "https://a-url.com")!)
-
-            let item1JSON = [
-                "id": item1.id.uuidString,
-                "image": item1.imageURL.absoluteString,
-            ]
-
-            let item2 = FeedItem(id: UUID(),
-                                 description: "a description",
-                                 location: "a location",
-                                 imageURL: URL(string: "https://another-url.com")!)
-
-            let item2JSON = [
-                "id": item2.id.uuidString,
-                "description": item2.description,
-                "location": item2.location,
-                "image": item2.imageURL.absoluteString,
-            ]
-
-            let itemsJSON = [
-                "items": [item1JSON, item2JSON]
-            ]
-
-            expect(sut, toCompleteWith: .success([item1, item2]), when: {
-                let json = try! JSONSerialization.data(withJSONObject: itemsJSON)
-                client.complete(withStatusCode: 200, data: json)
-            })
-        }
+    func tests_load_deliversItemsOn200HTTPResponseWithJSONItems() {
+        let (sut, client) = makeSUT()
+        
+        let item1 = makeItem(
+                    id: UUID(),
+                    imageURL: URL(string: "https://a-url.com")!)
+        
+        let item2 = makeItem(
+                    id: UUID(),
+                    description: "a description",
+                    location: "a location",
+                    imageURL: URL(string: "https://another-url.com")!)
+        
+        let items = [item1.model, item2.model]
+        
+        expect(sut, toCompleteWith: .success(items), when: {
+            let json = makeItemJSON([item1.json, item2.json])
+            client.complete(withStatusCode: 200, data: json)
+        })
+    }
     
     func test_load_deliversErrorOnClientError() {
         let (sut,client) = makeSUT()
@@ -116,6 +102,24 @@ class RemoteLoaderTests: XCTestCase {
         }
         action()
         XCTAssertEqual(capturedResults, [result], file: file, line: line)
+    }
+    
+    func makeItem(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) -> (model: FeedItem, json: [String: Any]) {
+        let item = FeedItem(id: id, description: description, location: location, imageURL: imageURL)
+        let json = [
+            "id": item.id.uuidString,
+            "description": item.description,
+            "location": item.location,
+            "image": item.imageURL.absoluteString,
+        ].reduce(into: [String: Any]()) { (accumulated, element) in
+            if let value = element.value { accumulated[element.key] = value }
+        }
+        return (item, json)
+    }
+    
+    private func makeItemJSON(_ items: [[String: Any]]) -> Data {
+        let itemsJSON = ["items": items]
+        return try! JSONSerialization.data(withJSONObject: itemsJSON)
     }
     
     private class HTTPClientSpy: HTTPClient {
@@ -146,25 +150,4 @@ class RemoteLoaderTests: XCTestCase {
         }
         
     }
-    
-    //    override func setUpWithError() throws {
-    //        // Put setup code here. This method is called before the invocation of each test method in the class.
-    //    }
-    //
-    //    override func tearDownWithError() throws {
-    //        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    //    }
-    //
-    //    func testExample() throws {
-    //        // This is an example of a functional test case.
-    //        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    //    }
-    //
-    //    func testPerformanceExample() throws {
-    //        // This is an example of a performance test case.
-    //        self.measure {
-    //            // Put the code you want to measure the time of here.
-    //        }
-    //    }
-    
 }

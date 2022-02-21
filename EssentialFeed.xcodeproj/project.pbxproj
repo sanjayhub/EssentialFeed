@@ -15,6 +15,7 @@
 		298581B727B583D300E005DA /* RemoteLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 298581B627B583D300E005DA /* RemoteLoaderTests.swift */; };
 		298581BA27BA41F900E005DA /* RemoteFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 298581B927BA41F900E005DA /* RemoteFeedLoader.swift */; };
 		29B62F5327C393DC0026407D /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B62F5227C393DC0026407D /* HTTPClient.swift */; };
+		29B62F5527C394C20026407D /* FeedItemsWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29B62F5427C394C20026407D /* FeedItemsWrapper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +38,7 @@
 		298581B627B583D300E005DA /* RemoteLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteLoaderTests.swift; sourceTree = "<group>"; };
 		298581B927BA41F900E005DA /* RemoteFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedLoader.swift; sourceTree = "<group>"; };
 		29B62F5227C393DC0026407D /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
+		29B62F5427C394C20026407D /* FeedItemsWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItemsWrapper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +102,7 @@
 			children = (
 				298581B927BA41F900E005DA /* RemoteFeedLoader.swift */,
 				29B62F5227C393DC0026407D /* HTTPClient.swift */,
+				29B62F5427C394C20026407D /* FeedItemsWrapper.swift */,
 			);
 			path = FeedAPI;
 			sourceTree = "<group>";
@@ -227,6 +230,7 @@
 				298581BA27BA41F900E005DA /* RemoteFeedLoader.swift in Sources */,
 				29B62F5327C393DC0026407D /* HTTPClient.swift in Sources */,
 				298581B127B582AF00E005DA /* FeedItem.swift in Sources */,
+				29B62F5527C394C20026407D /* FeedItemsWrapper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

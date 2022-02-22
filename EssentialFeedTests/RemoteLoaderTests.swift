@@ -8,7 +8,6 @@
 import XCTest
 import EssentialFeed
 
-
 class RemoteLoaderTests: XCTestCase {
     
     func test_init_doesNotRequestDataFromURL() {
@@ -140,7 +139,6 @@ class RemoteLoaderTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    
     func makeItem(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) -> (model: FeedItem, json: [String: Any]) {
         let item = FeedItem(id: id, description: description, location: location, imageURL: imageURL)
         let json = [
@@ -185,6 +183,5 @@ class RemoteLoaderTests: XCTestCase {
             )!
             messages[index].completion(.success(data, response))
         }
-        
     }
 }

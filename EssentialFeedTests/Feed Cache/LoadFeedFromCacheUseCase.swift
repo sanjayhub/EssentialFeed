@@ -65,6 +65,14 @@ class LoadFeedFromCacheUseCase: XCTestCase {
             store.completeRetreival(with: feed.local, timestamp: moreThanSevenDaysOldTimestamp)
         }
     }
+    
+    func test_load_deletesCacheOnRetrievalError() {
+        let (sut, store) = makeSUT()
+        let retreivalError = anyNSError()
+        sut.load { _ in }
+        store.completeRetreival(with: retreivalError)
+        XCTAssertEqual(store.receivedMessages, [.retrieve, .deleteCachedFeed])
+    }
     // MARK: - Helpers
     
     private func makeSUT(currentDate: @escaping () -> Date = Date.init,file: StaticString = #filePath, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStoreSpy) {

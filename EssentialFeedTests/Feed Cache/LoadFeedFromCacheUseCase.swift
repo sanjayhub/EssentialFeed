@@ -38,9 +38,9 @@ class LoadFeedFromCacheUseCase: XCTestCase {
     
     func test_load_deliversCachedImagesOnLessThanSevenDaysOldCache() {
         let feed = uniqueImageFeed()
-        let currentDate = Date()
-        let lessThanSevenDaysOldTimestamp = currentDate.adding(days: -7).adding(seconds: 1)
-        let (sut, store) = makeSUT()
+        let fixedCurrentDate = Date()
+        let lessThanSevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7).adding(seconds: 1)
+        let (sut, store) = makeSUT(currentDate: {fixedCurrentDate})
         expect(sut, toCompleteWith: .success(feed.models)) {
             store.completeRetreival(with: feed.local, timestamp: lessThanSevenDaysOldTimestamp)
         }
@@ -48,9 +48,9 @@ class LoadFeedFromCacheUseCase: XCTestCase {
     
     func test_load_deliversNoImagesOnSevenDaysOldCache() {
         let feed = uniqueImageFeed()
-        let currentDate = Date()
-        let sevenDaysOldTimestamp = currentDate.adding(days: -7)
-        let (sut, store) = makeSUT()
+        let fixedCurrentDate = Date()
+        let sevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7)
+        let (sut, store) = makeSUT(currentDate: {fixedCurrentDate})
         expect(sut, toCompleteWith: .success([])) {
             store.completeRetreival(with: feed.local, timestamp: sevenDaysOldTimestamp)
         }
@@ -58,9 +58,9 @@ class LoadFeedFromCacheUseCase: XCTestCase {
     
     func test_load_deliversNoImagesOnMoreThanSevenDaysOldCache() {
         let feed = uniqueImageFeed()
-        let currentDate = Date()
-        let moreThanSevenDaysOldTimestamp = currentDate.adding(days: -7).adding(seconds: -1)
-        let (sut, store) = makeSUT()
+        let fixedCurrentDate = Date()
+        let moreThanSevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7).adding(seconds: -1)
+        let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
         expect(sut, toCompleteWith: .success([])) {
             store.completeRetreival(with: feed.local, timestamp: moreThanSevenDaysOldTimestamp)
         }

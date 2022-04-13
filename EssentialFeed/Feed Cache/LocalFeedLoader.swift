@@ -33,7 +33,6 @@ public final class LocalFeedLoader {
 }
 
 extension LocalFeedLoader {
-    
     public func save(_ feed: [FeedImage], completion: @escaping (SaveResult) -> Void) {
         store.deleteCachedFeed { [weak self] error in
             guard let self = self else { return }
@@ -52,12 +51,14 @@ extension LocalFeedLoader {
             completion(error)
         }
     }
-    
+}
+
+extension LocalFeedLoader {
     public func load(completion: @escaping (LoadResult) -> Void) {
         store.retrieve { [weak self] result in
             guard let self = self else { return }
             switch result {
-            
+                
             case let .failure(error):
                 completion(.failure(error))
             case let .found(feed, timestamp) where self.validate(timestamp):
@@ -67,7 +68,9 @@ extension LocalFeedLoader {
             }
         }
     }
-    
+}
+
+extension LocalFeedLoader {
     public func validateCache() {
         store.retrieve { [weak self] result in
             guard let self = self else { return }
@@ -77,7 +80,7 @@ extension LocalFeedLoader {
             case let .found(_, timestamp) where !self.validate(timestamp):
                 self.store.deleteCachedFeed { _ in }
             case .empty, .found:
-                break 
+                break
             }
         }
     }

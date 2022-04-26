@@ -61,7 +61,7 @@ class CodableFeedStore {
         do {
             let encoder = JSONEncoder()
             let cache = Cache(feed: feed.map(CodableFeedImage.init),timestamp: timestamp)
-            let encoded = try! encoder.encode(cache)
+            let encoded = try encoder.encode(cache)
             try encoded.write(to: storeURL)
             completion(nil)
         } catch {
@@ -70,6 +70,10 @@ class CodableFeedStore {
     }
     
     func deleteCachedFeed(_ completion: @escaping FeedStore.DeletionCompletion) {
+        guard FileManager.default.fileExists(atPath: storeURL.path) else {
+            return completion(nil)
+        }
+        try! FileManager.default.removeItem(at: storeURL)
         completion(nil)
     }
 }
@@ -152,6 +156,20 @@ class CodableFeedStoreTests: XCTestCase {
     
     func test_delete_hasNoSideEffectsOnEmptyCache() {
         let sut = makeSUT()
+        let exp = expectation(description: "wait for cache deletion")
+        sut.deleteCachedFeed { deleteError in
+            XCTAssertNil(deleteError, "Expected empty cache deletion to succeed")
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    func test_delete_emptiesPreviouslyInsertedCache() {
+        let sut = makeSUT()
+        let feed = uniqueImageFeed().local
+        let timestamp = Date()
+        
+        insert((feed, timestamp), to: sut)
         let exp = expectation(description: "wait for cache deletion")
         sut.deleteCachedFeed { deleteError in
             XCTAssertNil(deleteError, "Expected empty cache deletion to succeed")

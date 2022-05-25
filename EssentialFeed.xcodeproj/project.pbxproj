@@ -40,6 +40,7 @@
 		29DA6F5C27E80043006919C4 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2985819827B5825C00E005DA /* EssentialFeed.framework */; };
 		29E132C6280E3C2C00D17777 /* CodableFeedStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29E132C5280E3C2C00D17777 /* CodableFeedStoreTests.swift */; };
 		29E593F8283D2D0C0086E67E /* XCTTestCase+MemoryLeakTrackingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295693D727E01AB70026960A /* XCTTestCase+MemoryLeakTrackingHelper.swift */; };
+		29E593FA283DB06F0086E67E /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29E593F9283DB06F0086E67E /* FeedViewController.swift */; };
 		29FE0701281ECB7B00C296E5 /* FeedStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29FE0700281ECB7B00C296E5 /* FeedStoreSpecs.swift */; };
 		29FE0703281EEE1A00C296E5 /* XCTestCase+FeedStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29FE0702281EEE1A00C296E5 /* XCTestCase+FeedStoreSpecs.swift */; };
 /* End PBXBuildFile section */
@@ -101,6 +102,7 @@
 		29DA6F5827E80043006919C4 /* EssentialFeedAPIEndToEndTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedAPIEndToEndTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		29DA6F5A27E80043006919C4 /* EssentialFeedAPIEndToEndTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EssentialFeedAPIEndToEndTest.swift; sourceTree = "<group>"; };
 		29E132C5280E3C2C00D17777 /* CodableFeedStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableFeedStoreTests.swift; sourceTree = "<group>"; };
+		29E593F9283DB06F0086E67E /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		29FE0700281ECB7B00C296E5 /* FeedStoreSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedStoreSpecs.swift; sourceTree = "<group>"; };
 		29FE0702281EEE1A00C296E5 /* XCTestCase+FeedStoreSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+FeedStoreSpecs.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -151,6 +153,7 @@
 		29477B18283715A1000520AC /* EssentialFeediOS */ = {
 			isa = PBXGroup;
 			children = (
+				29E593F9283DB06F0086E67E /* FeedViewController.swift */,
 			);
 			path = EssentialFeediOS;
 			sourceTree = "<group>";
@@ -423,6 +426,7 @@
 				TargetAttributes = {
 					29477B16283715A1000520AC = {
 						CreatedOnToolsVersion = 13.3;
+						LastSwiftMigration = 1330;
 					};
 					29477B1D283715A1000520AC = {
 						CreatedOnToolsVersion = 13.3;
@@ -505,6 +509,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29E593FA283DB06F0086E67E /* FeedViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -589,6 +594,7 @@
 		29477B27283715A1000520AC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -613,6 +619,7 @@
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -621,6 +628,7 @@
 		29477B28283715A1000520AC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -654,6 +662,7 @@
 		29477B2A283715A1000520AC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
@@ -676,6 +685,7 @@
 		29477B2B283715A1000520AC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;

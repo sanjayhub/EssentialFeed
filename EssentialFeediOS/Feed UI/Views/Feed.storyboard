@@ -115,6 +115,7 @@ Location</string>
                         <connections>
                             <outlet property="dataSource" destination="Oda-YB-bps" id="DaY-lR-d6t"/>
                             <outlet property="delegate" destination="Oda-YB-bps" id="MWG-1b-JLm"/>
+                            <outlet property="prefetchDataSource" destination="Oda-YB-bps" id="f6E-Ky-LMp"/>
                         </connections>
                     </tableView>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="d06-H1-DzA">

@@ -10,15 +10,16 @@ import UIKit
 final class FeedImageCellController {
     
     private let viewModel: FeedImageViewModel<UIImage>
+    private var cell: FeedImageCell?
     
     init(viewModel: FeedImageViewModel<UIImage>) {
         self.viewModel = viewModel
     }
     
-    func view() -> UITableViewCell {
-        let cell = binded(FeedImageCell())
+    func view(in tableView: UITableView) -> UITableViewCell {
+        cell = binded(tableView.dequeueReusableCell())
         viewModel.loadImageData()
-        return cell
+        return cell!
     }
     
     func preload() {
@@ -27,6 +28,14 @@ final class FeedImageCellController {
     
     func cancelLoad() {
         viewModel.cancelImageDataLoad()
+        releaseCellForReuse()
+    }
+    
+    private func releaseCellForReuse() {
+        cell = nil
+        viewModel.onImageLoadingStateChange = nil
+        viewModel.onImageLoad = nil
+        viewModel.onShouldRetryImageLoadStateChange = nil
     }
     
     private func binded(_ cell: FeedImageCell) -> FeedImageCell {
@@ -36,7 +45,7 @@ final class FeedImageCellController {
         cell.onRetry = viewModel.loadImageData
         
         viewModel.onImageLoad = { [weak cell] image in
-            cell?.feedImageView.image = image
+            cell?.feedImageView.setImageAnimated(image)
         }
         
         viewModel.onImageLoadingStateChange = { [weak cell] isLoading in

@@ -10,16 +10,12 @@ import UIKit
 import EssentialFeed
 import EssentialFeediOS
 
-final class FeedViewControllerTests: XCTestCase {
+final class FeedUIIntegrationTests: XCTestCase {
     
     func test_feedView_hasTitle() {
         let (sut, _) = makeSUT()
         sut.loadViewIfNeeded()
-        let bundle = Bundle(for: FeedViewController.self)
-        let localizedKey = "FEED_VIEW_TITLE"
-        let localizedTitle = bundle.localizedString(forKey: localizedKey, value: nil, table: "Feed")
-        XCTAssertNotEqual(localizedTitle, localizedKey, "Missing localised string for key:\(localizedKey)")
-        XCTAssertEqual(sut.title, localizedTitle)
+        XCTAssertEqual(sut.title, localised("FEED_VIEW_TITLE"))
     }
     
     func test_loadFeedActions_requestFeedFromLoader() {
@@ -353,7 +349,16 @@ final class FeedViewControllerTests: XCTestCase {
             imageRequests[index].completion(.failure(error))
         }
     }
-
+    
+    private func localised(_ key: String, file: StaticString = #file, line: UInt = #line) -> String {
+        let bundle = Bundle(for: FeedViewController.self)
+        let table = "Feed"
+        let value = bundle.localizedString(forKey: key, value: nil, table: table)
+        if value == key {
+            XCTFail("Missing localised string for key:\(key)", file: file, line: line)
+        }
+        return value
+    }
 }
 
 private extension FeedViewController {

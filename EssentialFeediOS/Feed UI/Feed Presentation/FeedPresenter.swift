@@ -38,11 +38,6 @@ final class FeedPresenter {
     }
     
     func didStartLoadingFeed() {
-        guard Thread.isMainThread else {
-            return DispatchQueue.main.async { [weak self] in
-                self?.didStartLoadingFeed()
-            }
-        }
         loadingView.display(FeedLoadingViewModel(isLoading: true))
     }
     

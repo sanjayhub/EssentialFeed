@@ -21,7 +21,7 @@ final public class FeedViewController: UITableViewController, UITableViewDataSou
     var delegate: FeedViewControllerDelegate?
     
     public override func viewDidLoad() {
-        super.viewDidLoad()        
+        super.viewDidLoad()
         refresh()
     }
     

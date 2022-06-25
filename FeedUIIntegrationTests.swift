@@ -10,7 +10,13 @@ import UIKit
 import EssentialFeed
 import EssentialFeediOS
 
-final class FeedViewControllerTests: XCTestCase {
+final class FeedUIIntegrationTests: XCTestCase {
+    
+    func test_feedView_hasTitle() {
+        let (sut, _) = makeSUT()
+        sut.loadViewIfNeeded()
+        XCTAssertEqual(sut.title, localised("FEED_VIEW_TITLE"))
+    }
     
     func test_loadFeedActions_requestFeedFromLoader() {
         let (sut, loader) = makeSUT()
@@ -247,6 +253,32 @@ final class FeedViewControllerTests: XCTestCase {
         
         XCTAssertNil(view?.renderedImage,"Expected no rendered image when an image load finishes after the view is not visible anymore")
     }
+    
+    func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {
+        let (sut, loader) = makeSUT()
+        sut.loadViewIfNeeded()
+        let exp = expectation(description: "wait for background queue")
+        DispatchQueue.global().async {
+            loader.completeFeedLoading()
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    func test_loadImageDataCompletion_dispatchesFromBackgroundToMainThread() {
+        let (sut, loader) = makeSUT()
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(with: [makeImage()])
+        _ = sut.simulateFeedImageViewVisible(at: 0)
+        
+        let exp = expectation(description: "wait for background queue work")
+        DispatchQueue.global().async {
+            loader.completeImageLoading(with: self.anyImageData(), at: 0)
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 2.0)
+    }
+    
 
     // MARK: - Helpers
     
@@ -343,7 +375,16 @@ final class FeedViewControllerTests: XCTestCase {
             imageRequests[index].completion(.failure(error))
         }
     }
-
+    
+    private func localised(_ key: String, file: StaticString = #file, line: UInt = #line) -> String {
+        let bundle = Bundle(for: FeedViewController.self)
+        let table = "Feed"
+        let value = bundle.localizedString(forKey: key, value: nil, table: table)
+        if value == key {
+            XCTFail("Missing localised string for key:\(key)", file: file, line: line)
+        }
+        return value
+    }
 }
 
 private extension FeedViewController {

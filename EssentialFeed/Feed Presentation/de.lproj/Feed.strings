@@ -1,0 +1,9 @@
+/* 
+  Feed.strings
+  EssentialFeed
+
+  Created by Kumar, Sanjay (623) on 27/06/22.
+  
+*/
+"FEED_VIEW_TITLE" = "Mein Futter";
+"FEED_VIEW_CONNECTION_ERROR" = "error";

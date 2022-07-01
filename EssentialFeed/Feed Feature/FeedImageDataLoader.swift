@@ -1,8 +1,8 @@
 //
 //  FeedImageDataLoader.swift
-//  EssentialFeediOS
+//  EssentialFeed
 //
-//  Created by Kumar, Sanjay (623) on 02/06/22.
+//  Created by Kumar, Sanjay (623) on 01/07/22.
 //
 
 import Foundation

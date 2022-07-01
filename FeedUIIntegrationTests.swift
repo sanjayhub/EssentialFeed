@@ -363,6 +363,7 @@ final class FeedUIIntegrationTests: XCTestCase {
 
         func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
             imageRequests.append((url, completion))
+            
             return TaskSpy { [weak self] in self?.cancelledImageURLs.append(url) }
         }
         
@@ -377,7 +378,7 @@ final class FeedUIIntegrationTests: XCTestCase {
     }
     
     private func localised(_ key: String, file: StaticString = #file, line: UInt = #line) -> String {
-        let bundle = Bundle(for: FeedViewController.self)
+        let bundle = Bundle(for: FeedPresenter.self)
         let table = "Feed"
         let value = bundle.localizedString(forKey: key, value: nil, table: table)
         if value == key {

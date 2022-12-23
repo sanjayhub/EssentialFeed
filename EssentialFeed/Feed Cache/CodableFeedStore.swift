@@ -43,6 +43,8 @@ public class CodableFeedStore: FeedStore {
     }
     
     public func retrieve(completion: @escaping RetrievalCompletion) {
+        //trick: As storeURL is just a data or value type, instead of capturing self.
+        //create a reference to value type outside of the closure.
         let storeURL = self.storeURL
         queue.async {
             guard let data = try? Data(contentsOf: storeURL) else {

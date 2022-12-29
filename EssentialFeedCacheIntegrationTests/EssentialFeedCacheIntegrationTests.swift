@@ -30,20 +30,8 @@ class EssentialFeedCacheIntegrationTests: XCTestCase {
         let sutToPerformSave = makeSUT()
         let sutToPerformLoad = makeSUT()
         let feed = uniqueImageFeed().models
-        
-        let saveExp = expectation(description: "Wait for save completion")
-        
-        sutToPerformSave.save(feed) { result in
-            switch result {
-            case .success:
-                break;
-            case let .failure(error):
-                XCTFail("Expected successful feed result, got \(error) instead")
-            }
-            saveExp.fulfill()
-            
-        }
-        wait(for: [saveExp], timeout: 1.0)
+                
+        save(feed, with: sutToPerformSave)
         
         expect(sutToPerformLoad, toLoad: feed)
     }
@@ -55,39 +43,12 @@ class EssentialFeedCacheIntegrationTests: XCTestCase {
         let firstFeed = uniqueImageFeed().models
         let secondFeed = uniqueImageFeed().models
         
-        let saveExp1 = expectation(description: "Wait for first save completion")
+        save(firstFeed, with: sutToPerformFirstSave)
         
-        sutToPerformFirstSave.save(firstFeed) { result in
-            switch result {
-            case .success:
-                break;
-            case let .failure(error):
-                XCTFail("Expected successful feed result, got \(error) instead")
-            }
-            saveExp1.fulfill()
-            
-        }
-        wait(for: [saveExp1], timeout: 1.0)
-        
-        
-        let saveExp2 = expectation(description: "Wait for second save completion")
-        
-        sutToPerformSecondSave.save(secondFeed) { result in
-            switch result {
-            case .success:
-                break;
-            case let .failure(error):
-                XCTFail("Expected successful feed result, got \(error) instead")
-            }
-            saveExp2.fulfill()
-            
-        }
-        wait(for: [saveExp2], timeout: 1.0)
+        save(secondFeed, with: sutToPerformSecondSave)
         
         expect(sutToPerformLoad, toLoad: secondFeed)
     }
-    
-    
     
     //MARK: - Helpers
     
@@ -112,6 +73,20 @@ class EssentialFeedCacheIntegrationTests: XCTestCase {
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1.0)
+    }
+    
+    private func save(_ feed: [FeedImage],with sut: LocalFeedLoader, file: StaticString = #file, line: UInt = #line )  {
+        let saveExp = expectation(description: "Wait for save completion")
+        sut.save(feed) { saveResult in
+            switch saveResult {
+            case .success:
+                break;
+            case let .failure(error):
+                XCTFail("Expected successful feed result, got \(error) instead")
+            }
+            saveExp.fulfill()
+        }
+        wait(for: [saveExp], timeout: 1.0)
     }
     
     private func testSpecificStoreURL() -> URL {

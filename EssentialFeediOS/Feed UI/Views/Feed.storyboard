@@ -116,6 +116,7 @@ Location</string>
                         <connections>
                             <outlet property="dataSource" destination="BcD-mE-pKA" id="OQ8-lq-jGk"/>
                             <outlet property="delegate" destination="BcD-mE-pKA" id="TOU-EG-aSc"/>
+                            <outlet property="prefetchDataSource" destination="BcD-mE-pKA" id="ghc-Cz-jUw"/>
                         </connections>
                     </tableView>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="Qv8-q3-Pt5">

@@ -18,7 +18,7 @@ final class FeedRefreshViewController: NSObject, FeedLoadingView {
     var delegate: FeedRefreshViewControllerDelegate?
     
     @IBAction func refresh() {
-        delegate.didRequestRefresh()
+        delegate?.didRequestRefresh()
     }
     
     func display(_ viewModel: FeedLoadingViewModel) {

@@ -37,7 +37,7 @@ final class FeedImagePresenter<View: FeedImageView, Image> where View.Image == I
     }
     
     func didFinishLoadingImageData(with error: Error, for model: FeedImage) {
-        view.display(FeedImageViewModel(description: model.description, location: model.location, image: nil, isLoading: false, shouldRetry: false))
+        view.display(FeedImageViewModel(description: model.description, location: model.location, image: nil, isLoading: false, shouldRetry: true))
     }
 }
 

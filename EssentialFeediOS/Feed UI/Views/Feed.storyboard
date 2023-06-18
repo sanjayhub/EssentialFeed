@@ -17,18 +17,35 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <view key="tableHeaderView" contentMode="scaleToFill" id="clu-9B-M8g" customClass="ErrorView" customModule="EssentialFeediOS">
-                            <rect key="frame" x="0.0" y="0.0" width="393" height="16"/>
+                            <rect key="frame" x="0.0" y="0.0" width="393" height="34"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9No-RG-Nok">
+                                    <rect key="frame" x="0.0" y="8" width="393" height="18"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" red="0.99951404330000004" green="0.41759261489999999" blue="0.4154433012" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="trailingMargin" secondItem="9No-RG-Nok" secondAttribute="trailing" constant="-8" id="BGK-Id-btD"/>
+                                <constraint firstItem="9No-RG-Nok" firstAttribute="top" secondItem="clu-9B-M8g" secondAttribute="top" constant="8" id="L1e-Ty-kV9"/>
+                                <constraint firstAttribute="bottom" secondItem="9No-RG-Nok" secondAttribute="bottom" constant="8" id="gBm-Pv-Jg2"/>
+                                <constraint firstItem="9No-RG-Nok" firstAttribute="leading" secondItem="clu-9B-M8g" secondAttribute="leadingMargin" constant="-8" id="leX-ks-Ywf"/>
+                            </constraints>
+                            <connections>
+                                <outlet property="label" destination="9No-RG-Nok" id="tSi-Rv-pRm"/>
+                            </connections>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="pGT-Qn-vv2">
-                            <rect key="frame" x="0.0" y="674" width="393" height="16"/>
+                            <rect key="frame" x="0.0" y="692" width="393" height="16"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="FeedImageCell" rowHeight="580" id="CLU-ox-CCi" customClass="FeedImageCell" customModule="EssentialFeediOS" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="66" width="393" height="580"/>
+                                <rect key="frame" x="0.0" y="84" width="393" height="580"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="CLU-ox-CCi" id="RWO-t2-aEr">
                                     <rect key="frame" x="0.0" y="0.0" width="393" height="580"/>
@@ -153,7 +170,7 @@ Location</string>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qcc-lI-jAq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1005.7971014492755" y="-148.66071428571428"/>
+            <point key="canvasLocation" x="1005.3435114503816" y="-149.29577464788733"/>
         </scene>
     </scenes>
     <resources>

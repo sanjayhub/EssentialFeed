@@ -5,4 +5,5 @@
   Created by Kumar, Sanjay (623) on 15/06/23.
   
 */
-"FEED_VIEW_TITLE" = "Mue Feed";
+"FEED_VIEW_TITLE" = "Min Feed";
+"FEED_VIEW_CONNECTION_ERROR" = "Det gick inte att ansluta till servern";

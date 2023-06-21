@@ -4,26 +4,6 @@
 //
 //  Created by Kumar, Sanjay (623) on 21/06/23.
 //
-
-public struct FeedErrorViewModel {
-    public let message: String?
-    
-    static var noError: FeedErrorViewModel {
-        return FeedErrorViewModel(message: nil)
-    }
-    static func error(message: String) -> FeedErrorViewModel {
-        FeedErrorViewModel(message: message)
-    }
-}
-
-public struct FeedViewModel {
-    public let feed: [FeedImage]
-}
-
-public struct FeedLoadingViewModel {
-    public let isLoading: Bool
-}
-
 public protocol FeedErrorView {
     func display(_ viewModel: FeedErrorViewModel)
 }
@@ -34,6 +14,7 @@ public protocol FeedLoadingView {
 public protocol FeedView {
     func display(_ viewModel: FeedViewModel)
 }
+
 public final class FeedPresenter {
     private let feedView : FeedView
     private let errorView: FeedErrorView

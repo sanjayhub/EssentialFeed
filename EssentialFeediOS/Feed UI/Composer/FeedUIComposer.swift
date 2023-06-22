@@ -17,8 +17,8 @@ public final class FeedUIComposer {
         let feedController = FeedViewController.makeWith(delegate: presentationAdapter, title: FeedPresenter.title)
         
         presentationAdapter.presenter = FeedPresenter(
-            loadingView: WeakRefVirtualProxy(feedController),
-            feedView: FeedViewAdapter(controller: feedController, loader: imageLoader))
+            feedView: FeedViewAdapter(controller: feedController, loader: imageLoader), loadingView: WeakRefVirtualProxy(feedController),
+            errorView: WeakRefVirtualProxy(feedController))
         
         return feedController
     }
@@ -49,6 +49,12 @@ extension WeakRefVirtualProxy: FeedLoadingView where T: FeedLoadingView {
 
 extension WeakRefVirtualProxy: FeedImageView where T: FeedImageView, T.Image == UIImage {
     func display(_ viewModel: FeedImageViewModel<UIImage>) {
+        object?.display(viewModel)
+    }
+}
+
+extension WeakRefVirtualProxy: FeedErrorView where T: FeedErrorView {
+    func display(_ viewModel: FeedErrorViewModel) {
         object?.display(viewModel)
     }
 }
@@ -87,7 +93,7 @@ private final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, 
     }
     
     func didRequestImage() {
-        presenter?.didStartLoadingImageData(with: model)
+        presenter?.didStartLoadingImageData(for: model)
         
         let model = self.model
         task = self.imageLoader.loadImageData(from: model.url) { [weak self] result in

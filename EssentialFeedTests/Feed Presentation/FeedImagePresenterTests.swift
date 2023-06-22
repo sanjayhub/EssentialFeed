@@ -27,30 +27,39 @@ protocol FeedImageView {
 
 class FeedImagePresenter<View: FeedImageView, Image> where View
     .Image == Image {
-    private let view: View
-    private let imageTransformer: (Data) -> Image?
-    
-    init(view: View, imageTransformer: @escaping (Data) -> Image? ) {
-        self.view = view
-        self.imageTransformer = imageTransformer
+        private let view: View
+        private let imageTransformer: (Data) -> Image?
+        
+        init(view: View, imageTransformer: @escaping (Data) -> Image? ) {
+            self.view = view
+            self.imageTransformer = imageTransformer
+        }
+        
+        func didStartLoadingImageData(for model: FeedImage) {
+            view.display(
+                FeedImageViewModel(
+                    description: model.description, location: model.location, image: nil, isLoading: true, shouldRetry: false))
+        }
+        
+        func didFinishLoadingImageData(with data: Data, for model: FeedImage) {
+            let image = imageTransformer(data)
+            view.display(FeedImageViewModel(
+                description: model.description,
+                location: model.location,
+                image: image,
+                isLoading: false,
+                shouldRetry: image == nil))
+        }
+        
+        func didFinishLoadingImageData(with error: Error, for model: FeedImage) {
+            view.display(FeedImageViewModel(
+                description: model.description,
+                location: model.location,
+                image: nil,
+                isLoading: false,
+                shouldRetry: true))
+        }
     }
-    
-    func didStartLoadingImageData(for model: FeedImage) {
-        view.display(
-            FeedImageViewModel(
-                description: model.description, location: model.location, image: nil, isLoading: true, shouldRetry: false))
-    }
-    
-    func didFinishLoadingImageData(with data: Data, for model: FeedImage) {
-        let image = imageTransformer(data)
-        view.display(FeedImageViewModel(
-            description: model.description,
-            location: model.location,
-            image: image,
-            isLoading: false,
-            shouldRetry: image == nil))
-    }
-}
 
 class FeedImagePresenterTests: XCTestCase {
     
@@ -89,7 +98,20 @@ class FeedImagePresenterTests: XCTestCase {
         XCTAssertEqual(message?.shouldRetry, true)
         XCTAssertNil(message?.image)
     }
-
+    func test_didFinishLoadingImageDataWithError_displaysRetry() {
+        let (sut, view) = makeSUT()
+        let image = uniqueImage()
+        sut.didFinishLoadingImageData(with: anyNSError(), for: image)
+        let message = view.messages.first
+        
+        XCTAssertEqual(view.messages.count, 1)
+        XCTAssertEqual(message?.description, image.description)
+        XCTAssertEqual(message?.location, image.location)
+        XCTAssertEqual(message?.isLoading, false)
+        XCTAssertEqual(message?.shouldRetry, true)
+        XCTAssertNil(message?.image)
+    }
+    
     func test_didFinishLoadingImageData_displaysImageOnSuccessfulTransformation() {
         let image = uniqueImage()
         let data = Data()

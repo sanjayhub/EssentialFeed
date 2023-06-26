@@ -6,55 +6,64 @@
 //
 
 import XCTest
+import EssentialFeed
 
 class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs {
+    
     func test_retrieve_deliversEmptyOnEmptyCache() {
-        <#code#>
+        let sut = makeSUT()
+        assertThatRetrieveDeliversEmptyOnEmptyCache(on: sut)
     }
     
     func test_retrieve_hasNoSideEffectsOnEmptyCache() {
-        <#code#>
+        
     }
     
     func test_retrieve_deliversFoundValuesOnNonEmptyCache() {
-        <#code#>
+        
     }
     
     func test_retrieve_hasNoSideEffectsOnNonEmptyCache() {
-        <#code#>
+        
     }
     
     func test_insert_deliversNoErrorOnEmptyCache() {
-        <#code#>
+        
     }
     
     func test_insert_deliversNoErrorOnNonEmptyCache() {
-        <#code#>
+        
     }
     
     func test_insert_overridesPreviouslyInsertedCacheValues() {
-        <#code#>
+        
     }
     
     func test_delete_deliversNoErrorOnEmptyCache() {
-        <#code#>
+        
     }
     
     func test_delete_hasNoSideEffectsOnEmptyCache() {
-        <#code#>
+        
     }
     
     func test_delete_deliversNoErrorOnNonEmptyCache() {
-        <#code#>
+        
     }
     
     func test_delete_emptiesPreviouslyInsertedCache() {
-        <#code#>
+        
     }
     
     func test_storeSideEffectsRunSerially() {
-        <#code#>
+        
     }
     
+    // MARK:- Helpers
     
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> FeedStore {
+        let sut = CoreDataFeedStore()
+        trackForMemoryLeaks(sut, file: file, line: line)
+        return sut
+    }
 }

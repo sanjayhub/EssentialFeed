@@ -40,11 +40,46 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
                 XCTFail("Expected successful feed result, got \(error) instead")
             }
             saveExp.fulfill()
-            
         }
         wait(for: [saveExp], timeout: 1.0)
 
         expect(sutToPerformLoad, toLoad: feed)
+    }
+    
+    func test_save_overridesItemsSavedOnASeparateInstance() {
+        let sutToPerformFirstSave = makeSUT()
+        let sutToPerformLastSave = makeSUT()
+        let sutToPerformLoad = makeSUT()
+        let firstFeed = uniqueImageFeed().models
+        let latestFeed = uniqueImageFeed().models
+        
+        let saveExp1 = expectation(description: "Wait for save completion")
+        sutToPerformFirstSave.save(firstFeed) { result in
+            switch result {
+            case .success:
+                break;
+            case let .failure(error):
+                XCTFail("Expected successful feed result, got \(error) instead")
+            }
+            saveExp1.fulfill()
+            
+        }
+        wait(for: [saveExp1], timeout: 1.0)
+        
+        let saveExp2 = expectation(description: "Wait for save completion")
+        sutToPerformLastSave.save(latestFeed) { result in
+            switch result {
+            case .success:
+                break;
+            case let .failure(error):
+                XCTFail("Expected successful feed result, got \(error) instead")
+            }
+            saveExp2.fulfill()
+            
+        }
+        wait(for: [saveExp2], timeout: 1.0)
+        
+        expect(sutToPerformLoad, toLoad: latestFeed)
     }
     
     // MARK :- Helpers

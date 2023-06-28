@@ -11,6 +11,11 @@ import CoreData
 private class ManagedCache: NSManagedObject {
     @NSManaged var timestamp: Date
     @NSManaged var feed: NSOrderedSet
+    
+    var localFeed: [LocalFeedImage]  {
+        feed.compactMap { ($0 as? ManagedFeedImage)?.local }
+    }
+
 }
 
 @objc(ManagedFeedImage)
@@ -20,6 +25,21 @@ private class ManagedFeedImage: NSManagedObject {
     @NSManaged var location: String?
     @NSManaged var url: URL
     @NSManaged var cache: ManagedCache
+    
+    static func images(for localFeed: [LocalFeedImage], in context: NSManagedObjectContext) -> NSOrderedSet {
+        return NSOrderedSet(array: localFeed.map { local in
+            let managed = ManagedFeedImage(context: context)
+            managed.id = local.id
+            managed.imageDescription = local.description
+            managed.url = local.url
+            managed.location = local.location
+            return managed
+        })
+    }
+    
+    var local: LocalFeedImage {
+        LocalFeedImage(id: id, description: imageDescription, location: location, url: url)
+    }
 }
 
 public final class CoreDataFeedStore: FeedStore {
@@ -41,14 +61,7 @@ public final class CoreDataFeedStore: FeedStore {
             do {
                 let managedCache = ManagedCache(context: context)
                 managedCache.timestamp = timestamp
-                managedCache.feed = NSOrderedSet(array: feed.map{ local in
-                    let managed = ManagedFeedImage(context: context)
-                    managed.id = local.id
-                    managed.imageDescription = local.description
-                    managed.url = local.url
-                    managed.location = local.location
-                    return managed
-                })
+                managedCache.feed = ManagedFeedImage.images(for: feed, in: context)
                 try context.save()
                 completion(.success(()))
             } catch {
@@ -66,11 +79,7 @@ public final class CoreDataFeedStore: FeedStore {
                 if let cache = try context.fetch(request).first {
                     completion(.success(
                         CachedFeed(
-                            feed: cache.feed
-                                   .compactMap({ ($0 as? ManagedFeedImage) })
-                                   .map {
-                                      LocalFeedImage(id: $0.id, description: $0.imageDescription, location: $0.location, url: $0.url)
-                            },
+                            feed: cache.localFeed,
                             timestamp: cache.timestamp)))
                 } else {
                     completion(.success(.none))

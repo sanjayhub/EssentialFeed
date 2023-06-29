@@ -17,9 +17,17 @@ class RemoteFeedImageDataLoader {
         case invalidData
     }
     
+    private struct HTTPTaskWrapper: FeedImageDataLoaderTask {
+        let wrapped: HTTPClientTask
+        
+        func cancel() {
+            wrapped.cancel()
+        }
+    }
+    
     @discardableResult
-    func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> HTTPClientTask {
-        client.get(from: url) { [weak self] result in
+    func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
+        return HTTPTaskWrapper(wrapped: client.get(from: url) { [weak self] result in
             guard self != nil else { return }
             switch result {
             case let .success((data, response)):
@@ -31,7 +39,7 @@ class RemoteFeedImageDataLoader {
             case let .failure(error):
                 completion(.failure(error))
             }
-        }
+        })
     }
 }
 

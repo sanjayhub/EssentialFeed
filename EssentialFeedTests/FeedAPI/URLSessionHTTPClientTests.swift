@@ -11,7 +11,7 @@ import EssentialFeed
 class URLSessionHTTPClientTests: XCTestCase {
     
     override func setUp() {
-       super.setUp()
+        super.setUp()
         URLProtocolStub.startInterceptionRequest()
     }
     
@@ -54,9 +54,9 @@ class URLSessionHTTPClientTests: XCTestCase {
         XCTAssertEqual(receivedValues?.response.url,response.url)
         XCTAssertEqual(receivedValues?.response.statusCode,response.statusCode)
     }
-        
+    
     func test_getFromURL_performGETRequestWithURL() {
-       
+        
         let url = anyURL()
         let exp = expectation(description: "Wait for request")
         URLProtocolStub.observeRequest { request in
@@ -129,7 +129,7 @@ class URLSessionHTTPClientTests: XCTestCase {
             return nil
         }
     }
-
+    
     private func resultFor(_ values: (data: Data?, response: URLResponse?, error: Error?)?, taskHandler: (HTTPClientTask) -> Void
                            = { _ in }, file: StaticString = #filePath, line: UInt = #line) -> HTTPClient.Result {
         values.map { URLProtocolStub.stub(data: $0, response: $1, error: $2) }
@@ -154,21 +154,29 @@ class URLSessionHTTPClientTests: XCTestCase {
     
     //URLProtocol stubbing
     private class URLProtocolStub: URLProtocol {
-        private static var stub: Stub?
-        private static var requestObserver: ((URLRequest) -> Void)?
         
         private struct Stub {
             let data: Data?
             let response: URLResponse?
             let error: Error?
+            let requestObserver: ((URLRequest) -> Void)?
         }
         
+        private static var _stub: Stub?
+        
+        private static var stub: Stub? {
+            get { return queue.sync { return _stub } }
+            set { queue.sync { _stub = newValue } }
+        }
+        
+        private static var queue = DispatchQueue(label: "URLProtocolStub.queue")
+        
         static func stub(data: Data?, response: URLResponse?, error: Error?) {
-            stub = Stub(data: data, response: response, error: error)
+            stub = Stub(data: data, response: response, error: error, requestObserver: nil)
         }
         
         static func observeRequest(observer: @escaping (URLRequest) -> Void) {
-            requestObserver = observer
+            stub = Stub(data: nil, response: nil, error: nil, requestObserver: observer)
         }
         
         static func startInterceptionRequest() {
@@ -177,7 +185,6 @@ class URLSessionHTTPClientTests: XCTestCase {
         static func stopInterceptionRequest() {
             URLProtocol.unregisterClass(URLProtocolStub.self)
             stub = nil
-            requestObserver = nil
         }
         
         override class func canInit(with request: URLRequest) -> Bool {
@@ -189,13 +196,8 @@ class URLSessionHTTPClientTests: XCTestCase {
         }
         
         override func startLoading() {
-            if let requestObserver = URLProtocolStub.requestObserver {
-                client?.urlProtocolDidFinishLoading(self)
-                return requestObserver(request)
-            }
             
             guard let stub = URLProtocolStub.stub else { return }
-        
             
             if let data = stub.data {
                 client?.urlProtocol(self, didLoad: data)
@@ -210,6 +212,8 @@ class URLSessionHTTPClientTests: XCTestCase {
             }
             
             client?.urlProtocolDidFinishLoading(self)
+            
+            stub.requestObserver?(request)
         }
         
         override func stopLoading() {

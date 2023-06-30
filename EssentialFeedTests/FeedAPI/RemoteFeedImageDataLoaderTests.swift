@@ -193,10 +193,6 @@ class RemoteFeedImageDataLoader {
             return .failure(error)
         }
         
-        private func anyData() -> Data {
-            return Data("any data".utf8)
-        }
-        
         private class HTTPClientSpy: HTTPClient {
             private struct Task: HTTPClientTask {
                 let callback: () -> Void

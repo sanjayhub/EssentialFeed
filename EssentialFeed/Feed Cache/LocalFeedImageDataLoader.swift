@@ -7,30 +7,13 @@
 
 import Foundation
 
-public class LocalFeedImageDataLoader {
+public final class LocalFeedImageDataLoader {
     let store: FeedImageDataStore
     public init(store: FeedImageDataStore) {
         self.store = store
     }
-    
-    private final class Task: FeedImageDataLoaderTask {
-        private var completion: ((FeedImageDataLoader.Result) -> Void)?
-        init(_ completion: @escaping (FeedImageDataLoader.Result) -> Void) {
-            self.completion = completion
-        }
-        func complete(with result: FeedImageDataLoader.Result) {
-            completion?(result)
-        }
-        
-        func cancel() {
-            preventFurtherCompletion()
-        }
-        private func preventFurtherCompletion() {
-            completion = nil
-        }
-    }
-    
 }
+        
 
 extension LocalFeedImageDataLoader {
     public typealias SaveResult = (FeedImageDataLoader.Result)
@@ -48,8 +31,25 @@ extension LocalFeedImageDataLoader: FeedImageDataLoader {
         case notFound
     }
     
+    private final class LoadImageDataTask: FeedImageDataLoaderTask {
+        private var completion: ((FeedImageDataLoader.Result) -> Void)?
+        init(_ completion: @escaping (FeedImageDataLoader.Result) -> Void) {
+            self.completion = completion
+        }
+        func complete(with result: FeedImageDataLoader.Result) {
+            completion?(result)
+        }
+        
+        func cancel() {
+            preventFurtherCompletion()
+        }
+        private func preventFurtherCompletion() {
+            completion = nil
+        }
+    }
+    
     public func loadImageData(from url: URL, completion: @escaping (LoadResult) -> Void) -> FeedImageDataLoaderTask {
-        let task = Task(completion)
+        let task = LoadImageDataTask(completion)
         store.retrieve(dataForURL: url) { [weak self] result in
             guard self != nil else { return }
             task.complete(with:result

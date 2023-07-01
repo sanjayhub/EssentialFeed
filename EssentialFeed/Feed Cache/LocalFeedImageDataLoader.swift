@@ -30,26 +30,34 @@ public class LocalFeedImageDataLoader {
         }
     }
     
-    public enum Error: Swift.Error {
+}
+
+extension LocalFeedImageDataLoader {
+    public typealias SaveResult = (FeedImageDataLoader.Result)
+    public func save(_ data: Data, for url: URL, completion: @escaping (SaveResult) -> Void ) {
+        store.insert(data, for: url) { _ in
+        }
+    }
+}
+
+extension LocalFeedImageDataLoader: FeedImageDataLoader {
+    public typealias LoadResult = FeedImageDataLoader.Result
+    
+    public enum LoadError: Swift.Error {
         case failed
         case notFound
     }
     
-    public func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
+    public func loadImageData(from url: URL, completion: @escaping (LoadResult) -> Void) -> FeedImageDataLoaderTask {
         let task = Task(completion)
         store.retrieve(dataForURL: url) { [weak self] result in
             guard self != nil else { return }
             task.complete(with:result
-                .mapError {  _ in Error.failed }
-                .flatMap { data in data.map { .success($0)} ?? .failure(Error.notFound) }
+                .mapError {  _ in LoadError.failed }
+                .flatMap { data in data.map { .success($0)} ?? .failure(LoadError.notFound) }
             )
         }
         return task
     }
-    
-    public func save(_ data: Data, for url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) {
-        store.insert(data, for: url) { _ in
-        }
-    }
-    
+
 }

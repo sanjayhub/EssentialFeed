@@ -77,7 +77,7 @@ public final class CoreDataFeedStore: FeedStore {
 
 extension CoreDataFeedStore {
     // MARK: - private function
-    private func perform(action: @escaping (NSManagedObjectContext) -> Void) {
+     func perform(action: @escaping (NSManagedObjectContext) -> Void) {
         let context = self.context
         context.perform {
             action(context)

@@ -31,16 +31,23 @@ public final class CoreDataFeedStore {
             throw StoreError.failedToLoadPersistentContainer(error)
         }
     }
-}
-
-extension CoreDataFeedStore {
-    // MARK: - private function
-     func perform(action: @escaping (NSManagedObjectContext) -> Void) {
+    
+    deinit {
+        cleanUpReferencesToPersistentStores()
+    }
+    
+    
+    func perform(action: @escaping (NSManagedObjectContext) -> Void) {
         let context = self.context
         context.perform {
             action(context)
         }
     }
+    
+    private func cleanUpReferencesToPersistentStores() {
+        context.performAndWait {
+            let coordinator = self.container.persistentStoreCoordinator
+            try? coordinator.persistentStores.forEach(coordinator.remove)
+        }
+    }
 }
-
-

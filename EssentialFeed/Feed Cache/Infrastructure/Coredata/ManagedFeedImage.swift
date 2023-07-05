@@ -13,6 +13,7 @@ class ManagedFeedImage: NSManagedObject {
     @NSManaged var imageDescription: String?
     @NSManaged var location: String?
     @NSManaged var url: URL
+    @NSManaged var data: Data?
     @NSManaged var cache: ManagedCache
     
     static func images(for localFeed: [LocalFeedImage], in context: NSManagedObjectContext) -> NSOrderedSet {
@@ -24,6 +25,14 @@ class ManagedFeedImage: NSManagedObject {
             managed.location = local.location
             return managed
         })
+    }
+    
+    static func first(with url: URL, in context: NSManagedObjectContext) throws -> ManagedFeedImage? {
+        let request = NSFetchRequest<ManagedFeedImage>(entityName: entity().name!)
+        request.predicate = NSPredicate(format: "%K = %@", argumentArray: [#keyPath(ManagedFeedImage.url), url])
+        request.returnsObjectsAsFaults = false
+        request.fetchLimit = 1
+        return try context.fetch(request).first
     }
     
     var local: LocalFeedImage {
